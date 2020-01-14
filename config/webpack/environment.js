@@ -14,4 +14,9 @@ environment.plugins.prepend('Provide',
   })
 )
 
+environment.node = {
+  fs: 'empty',
+  WebAR: 'empty'
+}
+
 module.exports = environment
