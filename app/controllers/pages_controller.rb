@@ -14,7 +14,6 @@ class PagesController < ApplicationController
   end
 
   def pattern
-    @hologram = Hologram.find(params[:id])
     render 'pattern'
   end
 
