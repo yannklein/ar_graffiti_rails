@@ -1,7 +1,8 @@
-require('dotenv').config()
+require('dotenv').config();
 import "bootstrap";
 import { init } from '../plugins/initThree';
 
-
-console.log("ThreeJS initialization...");
-init();
+if (window.holoQRPatt){
+  console.log("ThreeJS initialization...");
+  init(window.holoQRPatt);
+}

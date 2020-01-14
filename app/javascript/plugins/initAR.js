@@ -4,7 +4,7 @@ import { THREEx, WebAR } from '../vendor/ar';
 let artoolkitMarker;
 
 // Initialisation of AR JS
-const initARJS = (scene, camera, onRenderFcts, renderer) => {
+const initARJS = (scene, camera, onRenderFcts, renderer, holoQRPatt) => {
   // //////////////////////////////////////////////////////////////////////////////
   //          handle arToolkitSource
   // //////////////////////////////////////////////////////////////////////////////
@@ -63,7 +63,7 @@ const initARJS = (scene, camera, onRenderFcts, renderer) => {
     // type: 'barcode',
     // barcodeValue: 'https://magicstickr.github.io/video-base/index.html',
     type: 'pattern',
-    patternUrl: 'assets/marker.patt'
+    patternUrl: holoQRPatt
   });
 
   // build a smoothedControls

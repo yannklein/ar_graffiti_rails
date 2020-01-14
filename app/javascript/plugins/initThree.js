@@ -90,7 +90,7 @@ const graffitiCreate = (myScene) => {
   myScene.add(mesh);
 };
 
-const init = () => {
+const init = (holoQRPatt) => {
   // init renderer
   let onRenderFcts = [];
 
@@ -120,7 +120,7 @@ const init = () => {
   scene.add(light);
 
   // Add objects to the ThreeJS scene
-  const sceneAR = initARJS(scene, camera, onRenderFcts, renderer);
+  const sceneAR = initARJS(scene, camera, onRenderFcts, renderer, holoQRPatt);
   // addBox(1, sceneAR);
   graffitiCreate(sceneAR);
 

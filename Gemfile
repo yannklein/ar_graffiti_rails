@@ -8,6 +8,11 @@ gem 'puma'
 gem 'rails', '5.2.3'
 gem 'redis'
 
+gem 'barby',  '~> 0.6.2'
+gem 'rqrcode','~> 0.4.2'
+gem 'chunky_png'
+gem 'rmagick'
+
 gem 'autoprefixer-rails'
 gem 'font-awesome-sass', '~> 5.6.1'
 gem 'sassc-rails'

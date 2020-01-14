@@ -8,11 +8,6 @@ const myPublicId = 'grafitti';
 
 const CryptoJS = require("crypto-js");
 
-document.querySelector("body").insertAdjacentHTML(
-  "beforeend",
-  '<div style="position: absolute; z-index: 99; width: 40vw"><form><div class="form-group"><input id="inputSecret" type="password" class="form-control m-3" placeholder="Add the pass to enable graf saving!"></div></form></div>'
-);
-
 const createURLSearchParams = (data) => {
   const params = new URLSearchParams();
   Object.keys(data).forEach(key => params.append(key, data[key]));
