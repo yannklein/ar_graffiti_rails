@@ -1,4 +1,6 @@
-import * as THREE from 'three';
+import * as THREE from '../vendor/three.min.js';
+import { THREEx, WebAR } from '../vendor/ar';
+
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { initARJS, isMarkerVisible } from './initAR';
 import { uploadFile } from './initCloudinary';
@@ -22,6 +24,8 @@ const graffitiUpdate = (scene, camera) => {
 
   if (meshIntersects.length > 0) {
     const x = (meshIntersects[0].uv.x * textureCanvas.width);
+    // document.querySelector(".intersecx").innerHTML = meshIntersects[0].uv.x;
+    // document.querySelector(".computex").innerHTML = x;
     const y = (1 - meshIntersects[0].uv.y) * textureCanvas.height;
 
     if (mousePos === null) {
@@ -30,6 +34,7 @@ const graffitiUpdate = (scene, camera) => {
       textureContext.beginPath();
       textureContext.moveTo(mousePos.x, mousePos.y);
       textureContext.lineTo(x, y);
+      // Define stroke color
       strokeColor[0] += Math.round(Math.random() * 100 - 50);
       if (strokeColor[0] < 0) { strokeColor[0] = 0; }
       if (strokeColor[0] > 255) { strokeColor[0] = 255; }
@@ -40,7 +45,9 @@ const graffitiUpdate = (scene, camera) => {
       if (strokeColor[2] < 0) { strokeColor[2] = 0; }
       if (strokeColor[2] > 255) { strokeColor[2] = 255; }
       textureContext.strokeStyle = `rgb(${strokeColor[0]}, ${strokeColor[1]}, ${strokeColor[2]})`;
+      // Define line width
       textureContext.lineWidth = 1;
+      // Draw the stroke
       textureContext.stroke();
       mousePos = { x, y };
       const dataURL = textureCanvas.toDataURL();
@@ -94,6 +101,9 @@ const init = (holoQRPatt) => {
   // init renderer
   let onRenderFcts = [];
 
+  const container = document.getElementById( 'canvas' );
+	document.body.appendChild( container );
+
   const renderer = new THREE.WebGLRenderer({
     antialias: true,
     autoResize: true,
@@ -101,12 +111,11 @@ const init = (holoQRPatt) => {
   });
   renderer.setClearColor(new THREE.Color('lightgrey'), 0);
   renderer.setPixelRatio(window.devicePixelRatio);
-
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.domElement.style.position = 'absolute';
   renderer.domElement.style.top = '0px';
   renderer.domElement.style.left = '0px';
-  document.body.appendChild(renderer.domElement);
+  container.appendChild(renderer.domElement);
 
   // Scene settings
   const scene = new THREE.Scene();
@@ -147,11 +156,13 @@ const init = (holoQRPatt) => {
     });
   });
 
-  const onDocumentTouchStart = (event) => {
-    mouse.x = ((event.touches[0].clientX - renderer.domElement.offsetLeft) / renderer.domElement.clientWidth) - 0.5;
+  const onDocumentTouchStart = ( event ) => {
+    mouse.x = ((event.touches[0].clientX - renderer.domElement.offsetLeft) / renderer.domElement.clientWidth) * 2 - 1;
+    // document.querySelector(".offsetx").innerHTML = renderer.domElement.offsetLeft;
+    // document.querySelector(".mousex").innerHTML = mouse.x;
     mouse.y = -((event.touches[0].clientY - renderer.domElement.offsetTop) / renderer.domElement.clientHeight) * 2 + 1;
     mouse.down = true;
-  };
+}
 
 
   const onDocumentTouchEnd = (event) => {
@@ -160,7 +171,7 @@ const init = (holoQRPatt) => {
   };
 
   const onDocumentMouseDown = (event) => {
-    mouse.x = ((event.clientX / renderer.domElement.clientWidth) - 0.5);
+    mouse.x = ( ( event.clientX - renderer.domElement.offsetLeft ) / renderer.domElement.clientWidth ) * 2 - 1;
     // console.log(`Mouse X: ${mouse.x}`);
     // console.log(`Event client X: ${event.clientX}`);
     // console.log(`Client width: ${renderer.domElement.clientWidth}`);
