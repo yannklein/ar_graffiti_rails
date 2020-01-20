@@ -6,6 +6,8 @@ require 'barby/outputter/png_outputter'
 require 'rmagick'
 
 class PagesController < ApplicationController
+  before_action :set_cache_headers, only: [:live]
+
   def home
     @marker_png = create_marker
   end
@@ -42,6 +44,12 @@ class PagesController < ApplicationController
 
     full_image64 = Base64.encode64(base_marker.to_blob { |attrs| attrs.format = 'PNG' })
     "data:image/png;base64,#{full_image64}"
+  end
+
+  def set_cache_headers
+    response.headers["Cache-Control"] = "no-cache, no-store"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
   end
 
 end
