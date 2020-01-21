@@ -183,6 +183,24 @@ const init = (holoQRPatt, grafImage) => {
     }
   };
 
+  const adminCommand = (event) => {
+    if(event.key == "d") {
+      textureContext.clearRect(0, 0, textureCanvas.width, textureCanvas.height);
+      
+      const dataURL = textureCanvas.toDataURL();
+      if (isUploadPremitted) {
+        isUploadPremitted = false;
+        setTimeout(() => {
+          console.log(dataURL);
+          console.log("image erased");
+          isUploadPremitted = true;
+          uploadFile(dataURL, process.env.CLOUDINARY_SECRET_KEY);
+        }, uploadFrequency);
+      }
+      texture.needsUpdate = true;
+    }
+  }
+
   document.addEventListener('mousedown', onDocumentMouseDown);
   document.addEventListener('mouseup', onDocumentMouseDown);
   document.addEventListener('mousemove', onDocumentMouseDown);
@@ -190,6 +208,8 @@ const init = (holoQRPatt, grafImage) => {
   document.addEventListener('touchstart', onDocumentTouchStart);
   document.addEventListener('touchend', onDocumentTouchEnd);
   document.addEventListener('touchmove', onDocumentTouchStart);
+
+  document.addEventListener('keyup', adminCommand);
 };
 
 export { init };
