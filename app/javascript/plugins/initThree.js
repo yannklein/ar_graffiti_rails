@@ -65,7 +65,7 @@ const graffitiUpdate = (scene, camera) => {
   }
 };
 
-const graffitiCreate = (myScene) => {
+const graffitiCreate = (myScene, grafImage) => {
   // Customizable texture
   const canvasSize = 256;
   textureCanvas = document.createElement('canvas');
@@ -80,7 +80,7 @@ const graffitiCreate = (myScene) => {
     textureContext.drawImage(img, 0, 0);
   };
   img.crossOrigin = "anonymous";
-  img.src = 'https://res.cloudinary.com/yanninthesky/image/upload/grafitti.png';
+  img.src = grafImage;
 
 
   texture = new THREE.Texture(textureCanvas);
@@ -97,7 +97,7 @@ const graffitiCreate = (myScene) => {
   myScene.add(mesh);
 };
 
-const init = (holoQRPatt) => {
+const init = (holoQRPatt, grafImage) => {
   // init renderer
   let onRenderFcts = [];
 
@@ -131,7 +131,7 @@ const init = (holoQRPatt) => {
   // Add objects to the ThreeJS scene
   const sceneAR = initARJS(scene, camera, onRenderFcts, renderer, holoQRPatt);
   // addBox(1, sceneAR);
-  graffitiCreate(sceneAR);
+  graffitiCreate(sceneAR, grafImage);
 
   // render the scene
   onRenderFcts.push(() => {

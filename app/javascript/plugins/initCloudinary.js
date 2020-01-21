@@ -36,9 +36,10 @@ const uploadFile = (image, secret) => {
   fetch(url, {
     method: "POST",
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
+      'Content-Type': 'application/x-www-form-urlencoded',
     },
-    body: params
+    body: params,
+    invalidate: true
   });
 };
 

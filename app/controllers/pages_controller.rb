@@ -12,6 +12,7 @@ class PagesController < ApplicationController
   end
 
   def live
+    @graf_image = 'https://res.cloudinary.com/yanninthesky/image/upload/grafitti.png';
     expires_now
   end
 
