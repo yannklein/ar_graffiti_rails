@@ -16,6 +16,8 @@ let textureCanvas, textureContext, texture;
 let uploadFrequency = 1000;
 let isUploadPremitted = true;
 
+const sizeOfQrInCanvas = 200;
+
 const graffitiUpdate = (scene, camera) => {
   const raycaster = new THREE.Raycaster();
   // Graffiti update
@@ -67,7 +69,7 @@ const graffitiUpdate = (scene, camera) => {
 
 const graffitiCreate = (myScene, grafImage) => {
   // Customizable texture
-  const canvasSize = 256;
+  const canvasSize = 2048;
   textureCanvas = document.createElement('canvas');
   textureCanvas.width = canvasSize;
   textureCanvas.height = canvasSize;
@@ -93,7 +95,7 @@ const graffitiCreate = (myScene, grafImage) => {
   );
   mesh.rotation.x = -Math.PI / 2;
   mesh.name = "graffiti";
-  mesh.scale.multiplyScalar(0.02);
+  mesh.scale.multiplyScalar(1/sizeOfQrInCanvas);
   myScene.add(mesh);
 };
 
@@ -186,7 +188,11 @@ const init = (holoQRPatt, grafImage) => {
   const adminCommand = (event) => {
     if(event.key == "d") {
       textureContext.clearRect(0, 0, textureCanvas.width, textureCanvas.height);
-      
+      textureContext.fillStyle = 'rgba(255, 255, 255, 1)';
+      const qrCover = sizeOfQrInCanvas * 1.2;
+      textureContext.fillRect((textureCanvas.width - qrCover)/2, (textureCanvas.height - qrCover)/2, qrCover, qrCover);
+      // textureContext.fillRect(0, 0, textureCanvas.width, textureCanvas.height);
+
       const dataURL = textureCanvas.toDataURL();
       if (isUploadPremitted) {
         isUploadPremitted = false;
