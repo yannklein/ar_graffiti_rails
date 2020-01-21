@@ -56,7 +56,7 @@ const graffitiUpdate = (scene, camera) => {
       if (isUploadPremitted) {
         isUploadPremitted = false;
         setTimeout(() => {
-          console.log(dataURL);
+          // console.log(dataURL);
           console.log("image uploaded");
           isUploadPremitted = true;
           uploadFile(dataURL, process.env.CLOUDINARY_SECRET_KEY);
@@ -197,7 +197,7 @@ const init = (holoQRPatt, grafImage) => {
       if (isUploadPremitted) {
         isUploadPremitted = false;
         setTimeout(() => {
-          console.log(dataURL);
+          // console.log(dataURL);
           console.log("image erased");
           isUploadPremitted = true;
           uploadFile(dataURL, process.env.CLOUDINARY_SECRET_KEY);
