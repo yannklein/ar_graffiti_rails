@@ -30,24 +30,24 @@ const graffitiUpdate = (scene, camera) => {
       textureContext.moveTo(mousePos.x, mousePos.y);
       textureContext.lineTo(x, y);
       // Define stroke color
-      let strokeColor = [200, 200, 200];
-      strokeColor[0] += Math.round(Math.random() * 100 - 50);
-      if (strokeColor[0] < 0) { strokeColor[0] = 0; }
-      if (strokeColor[0] > 255) { strokeColor[0] = 255; }
-      strokeColor[1] += Math.round(Math.random() * 100 - 50);
-      if (strokeColor[1] < 0) { strokeColor[1] = 0; }
-      if (strokeColor[1] > 255) { strokeColor[1] = 255; }
-      strokeColor[2] += Math.round(Math.random() * 100 - 50);
-      if (strokeColor[2] < 0) { strokeColor[2] = 0; }
-      if (strokeColor[2] > 255) { strokeColor[2] = 255; }
+      let strokeColor = [255, 25, 255];
+      // strokeColor[0] += Math.round(Math.random() * 100 - 50);
+      // if (strokeColor[0] < 0) { strokeColor[0] = 0; }
+      // if (strokeColor[0] > 255) { strokeColor[0] = 255; }
+      // strokeColor[1] += Math.round(Math.random() * 100 - 50);
+      // if (strokeColor[1] < 0) { strokeColor[1] = 0; }
+      // if (strokeColor[1] > 255) { strokeColor[1] = 255; }
+      // strokeColor[2] += Math.round(Math.random() * 100 - 50);
+      // if (strokeColor[2] < 0) { strokeColor[2] = 0; }
+      // if (strokeColor[2] > 255) { strokeColor[2] = 255; }
       textureContext.strokeStyle = `rgb(${strokeColor[0]}, ${strokeColor[1]}, ${strokeColor[2]})`;
       // Define line width
-      textureContext.lineWidth = 2;
+      textureContext.lineWidth = 1;
       // Draw the stroke
       textureContext.stroke();
       mousePos = { x, y };
-      const dataURL = textureCanvas.toDataURL();
-      uploadToCloudinary(dataURL);
+      
+      uploadToCloudinary(textureCanvas.toDataURL());
     }
     texture.needsUpdate = true;
   }
@@ -67,7 +67,7 @@ const uploadToCloudinary = (dataURL) => {
 
 const graffitiCreate = (myScene, grafImage) => {
   // Customizable texture
-  const canvasSize = 2048;
+  const canvasSize = 1024;
   textureCanvas = document.createElement('canvas');
   textureCanvas.width = canvasSize;
   textureCanvas.height = canvasSize;
@@ -182,8 +182,7 @@ const init = (holoQRPatt, grafImage) => {
       textureContext.fillRect((textureCanvas.width - qrCover)/2, (textureCanvas.height - qrCover)/2, qrCover, qrCover);
       // textureContext.fillRect(0, 0, textureCanvas.width, textureCanvas.height);
 
-      const dataURL = textureCanvas.toDataURL();
-      uploadToCloudinary(dataURL);
+      uploadToCloudinary(textureCanvas.toDataURL());
       texture.needsUpdate = true;
     }
   }
