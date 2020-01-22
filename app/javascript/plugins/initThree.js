@@ -1,33 +1,26 @@
 import * as THREE from '../vendor/three.min.js';
 import { THREEx, WebAR } from '../vendor/ar';
 
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { initARJS, isMarkerVisible } from './initAR';
 import { uploadFile } from './initCloudinary';
-// import {initCSS3DRenderer, iFrameElement} from './initCSS3DRenderer';
 
-let mouse = new THREE.Vector2();
-let controls, controlsCSS3D;
-let camera;
+const mouse = new THREE.Vector2();
 
-let mousePos = null;
-let strokeColor = [200, 200, 200];
-let textureCanvas, textureContext, texture;
-let uploadFrequency = 1000;
-let isUploadPremitted = true;
-
+const uploadFrequency = 1000;
 const sizeOfQrInCanvas = 200;
+let isUploadPremitted = true;
+let mousePos = null;
+
+let textureCanvas, textureContext, texture;
 
 const graffitiUpdate = (scene, camera) => {
   const raycaster = new THREE.Raycaster();
   // Graffiti update
   raycaster.setFromCamera(mouse, camera);
-  const meshIntersects = raycaster.intersectObjects([scene.getObjectByName("graffiti")]);
+  const meshIntersects = raycaster.intersectObject(scene.getObjectByName("graffiti"));
 
   if (meshIntersects.length > 0) {
     const x = (meshIntersects[0].uv.x * textureCanvas.width);
-    // document.querySelector(".intersecx").innerHTML = meshIntersects[0].uv.x;
-    // document.querySelector(".computex").innerHTML = x;
     const y = (1 - meshIntersects[0].uv.y) * textureCanvas.height;
 
     if (mousePos === null) {
@@ -37,6 +30,7 @@ const graffitiUpdate = (scene, camera) => {
       textureContext.moveTo(mousePos.x, mousePos.y);
       textureContext.lineTo(x, y);
       // Define stroke color
+      let strokeColor = [200, 200, 200];
       strokeColor[0] += Math.round(Math.random() * 100 - 50);
       if (strokeColor[0] < 0) { strokeColor[0] = 0; }
       if (strokeColor[0] > 255) { strokeColor[0] = 255; }
@@ -48,22 +42,26 @@ const graffitiUpdate = (scene, camera) => {
       if (strokeColor[2] > 255) { strokeColor[2] = 255; }
       textureContext.strokeStyle = `rgb(${strokeColor[0]}, ${strokeColor[1]}, ${strokeColor[2]})`;
       // Define line width
-      textureContext.lineWidth = 1;
+      textureContext.lineWidth = 2;
       // Draw the stroke
       textureContext.stroke();
       mousePos = { x, y };
       const dataURL = textureCanvas.toDataURL();
-      if (isUploadPremitted) {
-        isUploadPremitted = false;
-        setTimeout(() => {
-          // console.log(dataURL);
-          console.log("image uploaded");
-          isUploadPremitted = true;
-          uploadFile(dataURL, process.env.CLOUDINARY_SECRET_KEY);
-        }, uploadFrequency);
-      }
+      uploadToCloudinary(dataURL);
     }
     texture.needsUpdate = true;
+  }
+};
+
+const uploadToCloudinary = (dataURL) => {
+  if (isUploadPremitted) {
+    isUploadPremitted = false;
+    setTimeout(() => {
+      // console.log(dataURL);
+      console.log("image uploaded");
+      isUploadPremitted = true;
+      uploadFile(dataURL, process.env.CLOUDINARY_SECRET_KEY);
+    }, uploadFrequency);
   }
 };
 
@@ -123,7 +121,7 @@ const init = (holoQRPatt, grafImage) => {
   const scene = new THREE.Scene();
 
   // Create a camera
-  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1500);
+  const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1500);
   scene.add(camera);
 
   const light = new THREE.AmbientLight(0xffffff); // soft white light
@@ -160,29 +158,20 @@ const init = (holoQRPatt, grafImage) => {
 
   const onDocumentTouchStart = ( event ) => {
     mouse.x = ((event.touches[0].clientX - renderer.domElement.offsetLeft) / renderer.domElement.clientWidth) * 2 - 1;
-    // document.querySelector(".offsetx").innerHTML = renderer.domElement.offsetLeft;
-    // document.querySelector(".mousex").innerHTML = mouse.x;
     mouse.y = -((event.touches[0].clientY - renderer.domElement.offsetTop) / renderer.domElement.clientHeight) * 2 + 1;
     mouse.down = true;
 }
 
 
-  const onDocumentTouchEnd = (event) => {
+  const onDocumentStrokeDone = (event) => {
     mouse.down = false;
     mousePos = null;
   };
 
   const onDocumentMouseDown = (event) => {
     mouse.x = ( ( event.clientX - renderer.domElement.offsetLeft ) / renderer.domElement.clientWidth ) * 2 - 1;
-    // console.log(`Mouse X: ${mouse.x}`);
-    // console.log(`Event client X: ${event.clientX}`);
-    // console.log(`Client width: ${renderer.domElement.clientWidth}`);
-
     mouse.y = -((event.clientY - renderer.domElement.offsetTop) / renderer.domElement.clientHeight) * 2 + 1;
     mouse.down = (event.buttons !== 0);
-    if (!mouse.down) {
-      mousePos = null;
-    }
   };
 
   const adminCommand = (event) => {
@@ -194,25 +183,17 @@ const init = (holoQRPatt, grafImage) => {
       // textureContext.fillRect(0, 0, textureCanvas.width, textureCanvas.height);
 
       const dataURL = textureCanvas.toDataURL();
-      if (isUploadPremitted) {
-        isUploadPremitted = false;
-        setTimeout(() => {
-          // console.log(dataURL);
-          console.log("image erased");
-          isUploadPremitted = true;
-          uploadFile(dataURL, process.env.CLOUDINARY_SECRET_KEY);
-        }, uploadFrequency);
-      }
+      uploadToCloudinary(dataURL);
       texture.needsUpdate = true;
     }
   }
 
   document.addEventListener('mousedown', onDocumentMouseDown);
-  document.addEventListener('mouseup', onDocumentMouseDown);
+  document.addEventListener('mouseup', onDocumentStrokeDone);
   document.addEventListener('mousemove', onDocumentMouseDown);
 
   document.addEventListener('touchstart', onDocumentTouchStart);
-  document.addEventListener('touchend', onDocumentTouchEnd);
+  document.addEventListener('touchend', onDocumentStrokeDone);
   document.addEventListener('touchmove', onDocumentTouchStart);
 
   document.addEventListener('keyup', adminCommand);
