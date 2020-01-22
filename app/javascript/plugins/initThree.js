@@ -30,7 +30,7 @@ const graffitiUpdate = (scene, camera) => {
       textureContext.moveTo(mousePos.x, mousePos.y);
       textureContext.lineTo(x, y);
       // Define stroke color
-      let strokeColor = [255, 25, 255];
+      let strokeColor = [255, 255, 255];
       // strokeColor[0] += Math.round(Math.random() * 100 - 50);
       // if (strokeColor[0] < 0) { strokeColor[0] = 0; }
       // if (strokeColor[0] > 255) { strokeColor[0] = 255; }
@@ -46,7 +46,7 @@ const graffitiUpdate = (scene, camera) => {
       // Draw the stroke
       textureContext.stroke();
       mousePos = { x, y };
-      
+
       uploadToCloudinary(textureCanvas.toDataURL());
     }
     texture.needsUpdate = true;
@@ -160,6 +160,10 @@ const init = (holoQRPatt, grafImage) => {
     mouse.x = ((event.touches[0].clientX - renderer.domElement.offsetLeft) / renderer.domElement.clientWidth) * 2 - 1;
     mouse.y = -((event.touches[0].clientY - renderer.domElement.offsetTop) / renderer.domElement.clientHeight) * 2 + 1;
     mouse.down = true;
+
+    if (event.touches.length == 3) {
+      eraseStrokes();
+    }
 }
 
 
@@ -176,15 +180,19 @@ const init = (holoQRPatt, grafImage) => {
 
   const adminCommand = (event) => {
     if(event.key == "d") {
-      textureContext.clearRect(0, 0, textureCanvas.width, textureCanvas.height);
-      textureContext.fillStyle = 'rgba(255, 255, 255, 1)';
-      const qrCover = sizeOfQrInCanvas * 1.2;
-      textureContext.fillRect((textureCanvas.width - qrCover)/2, (textureCanvas.height - qrCover)/2, qrCover, qrCover);
-      // textureContext.fillRect(0, 0, textureCanvas.width, textureCanvas.height);
-
-      uploadToCloudinary(textureCanvas.toDataURL());
-      texture.needsUpdate = true;
+      eraseStrokes();
     }
+  }
+
+  const eraseStrokes = () => {
+    textureContext.clearRect(0, 0, textureCanvas.width, textureCanvas.height);
+    textureContext.fillStyle = 'rgba(255, 255, 255, 1)';
+    const qrCover = sizeOfQrInCanvas * 1.2;
+    textureContext.fillRect((textureCanvas.width - qrCover)/2, (textureCanvas.height - qrCover)/2, qrCover, qrCover);
+    // textureContext.fillRect(0, 0, textureCanvas.width, textureCanvas.height);
+
+    uploadToCloudinary(textureCanvas.toDataURL());
+    texture.needsUpdate = true;
   }
 
   document.addEventListener('mousedown', onDocumentMouseDown);
