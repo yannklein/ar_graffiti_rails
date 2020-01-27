@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from '../vendor/three.min.js';
 import { THREEx, WebAR } from '../vendor/ar';
 
 let artoolkitMarker;

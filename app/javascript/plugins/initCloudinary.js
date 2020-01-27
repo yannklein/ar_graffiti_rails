@@ -11,7 +11,7 @@ const CryptoJS = require("crypto-js");
 const createURLSearchParams = (data) => {
   const params = new URLSearchParams();
   Object.keys(data).forEach(key => params.append(key, data[key]));
-  console.log(params.toString());
+  // console.log(params.toString());
   return params;
 };
 
