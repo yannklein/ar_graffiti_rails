@@ -30,6 +30,10 @@ const graffitiUpdate = (scene, camera, raycaster) => {
     if (mousePos === null) {
       mousePos = { x, y };
     } else {
+      let strokeColor = [0, 0, 0];
+      textureContext.strokeStyle = `rgb(${strokeColor[0]}, ${strokeColor[1]}, ${strokeColor[2]})`;
+      textureContext.lineWidth = 1;
+
       textureContext.beginPath();
       textureContext.moveTo(mousePos.x, mousePos.y);
       textureContext.lineTo(x, y);
@@ -68,10 +72,6 @@ const graffitiCreate = (scene, camera, grafImage) => {
   };
   img.crossOrigin = "anonymous";
   img.src = grafImage;
-
-  let strokeColor = [0, 0, 0];
-  textureContext.strokeStyle = `rgb(${strokeColor[0]}, ${strokeColor[1]}, ${strokeColor[2]})`;
-  textureContext.lineWidth = 1;
 
   texture = new THREE.Texture(textureCanvas);
   texture.needsUpdate = true;
