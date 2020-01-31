@@ -1,5 +1,6 @@
 import * as THREE from '../vendor/three.min.js';
 import { THREEx, WebAR } from '../vendor/ar';
+import ActionCable from 'actioncable';
 
 import { initARJS, isMarkerVisible } from './initAR';
 import { uploadFile } from './initCloudinary';
@@ -8,10 +9,26 @@ const uploadFrequency = 1000;
 const sizeOfQrInCanvas = 200;
 let isUploadPermitted = true;
 let mousePos = null;
+let textureCanvas, textureContext, texture;
+const chatroomId = window.chatroomId;
+
+
+
+const connectToCableDrawings  = () => {
+  App[`chat_room_${chatroomId}`] = App.cable.subscriptions.create(
+    { channel: 'ChatRoomsChannel', chat_room_id: chatroomId },
+    {
+      received: (data) => {
+        console.log(data);
+        if(data) {
+          drawLine(data.message_json);
+        }
+      }
+    }
+  );
+}
 
 const mouse = new THREE.Vector2();
-
-let textureCanvas, textureContext, texture;
 
 const renderer = new THREE.WebGLRenderer({
   antialias: true,
@@ -38,11 +55,41 @@ const graffitiUpdate = (scene, camera, raycaster) => {
       textureContext.moveTo(mousePos.x, mousePos.y);
       textureContext.lineTo(x, y);
       textureContext.stroke();
+      
+      fetch(
+        `./chat_rooms/${chatroomId}/messages`, 
+        {
+          method: "POST",
+          headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+          body: JSON.stringify({"startX": `${mousePos.x}`, "startY": `${mousePos.y}`, "endX": `${x}`, "endY": `${y}`})
+        }
+      );
+
+      // App[`chat_room_${chatroomId}`].send(
+      //     {"startX": `${mousePos.x}`, "startY": `${mousePos.y}`, "endX": `${x}`, "endY": `${y}`}
+      // );
+      // cableSocket.addEventListener('open', (event) => {
+      //   cableSocket.send(JSON.stringify({"startX": `${mousePos.x}`, "startY": `${mousePos.y}`, "endX": `${x}`, "endY": `${y}`}));
+      // });
       mousePos = { x, y };
     }
     texture.needsUpdate = true;
   }
 };
+
+const drawLine = (line) => {
+  textureContext.strokeStyle = `rgb(0,0,0)`;
+  textureContext.lineWidth = 1;
+
+  // console.log(typeof(line.startX));
+  // console.log(textureContext);
+  textureContext.beginPath();
+  textureContext.moveTo(line.startX, line.startY);
+  textureContext.lineTo(line.endX, line.endY);
+  textureContext.stroke();
+
+  texture.needsUpdate = true;
+}
 
 const uploadToCloudinary = (dataURL) => {
   if (isUploadPermitted) {
@@ -64,14 +111,20 @@ const graffitiCreate = (scene, camera, grafImage) => {
   textureCanvas.height = canvasSize;
   textureContext = textureCanvas.getContext('2d');
   textureContext.rect(0, 0, textureCanvas.width, textureCanvas.height);
-  // textureContext.fillStyle = 'rgba(255, 255, 255, 0)';
-  // textureContext.fill ();
-  const img = new Image();
-  img.onload = () => {
-    textureContext.drawImage(img, 0, 0);
-  };
-  img.crossOrigin = "anonymous";
-  img.src = grafImage;
+  textureContext.fillStyle = 'rgba(255, 255, 255, 1)';
+  textureContext.fill ();
+  // const img = new Image();
+  // img.onload = () => {
+  //   textureContext.drawImage(img, 0, 0);
+  // };
+  // img.crossOrigin = "anonymous";
+  // img.src = grafImage;
+
+  // Draw the lines coming from the DB
+  fetchCoord();
+
+  // Initiate connection to the cable to get drwaings from other participants
+  connectToCableDrawings();
 
   texture = new THREE.Texture(textureCanvas);
   texture.needsUpdate = true;
@@ -85,6 +138,17 @@ const graffitiCreate = (scene, camera, grafImage) => {
   graffitiArea.name = "graffiti";
   graffitiArea.scale.multiplyScalar(1/sizeOfQrInCanvas);
   scene.add(graffitiArea);
+
+};
+
+const fetchCoord = () => {
+  fetch('./live.json')
+  .then(response => response.json())
+  .then((data) => {
+    data.forEach((line) => {
+      drawLine(line);
+    });
+  });
 };
 
 const init = (holoQRPatt, grafImage) => {

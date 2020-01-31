@@ -3,6 +3,7 @@
   "private": true,
   "dependencies": {
     "@rails/webpacker": "4.2.2",
+    "actioncable": "^5.2.4-1",
     "bootstrap": "^4.4.1",
     "cloudinary": "^1.14.0",
     "cloudinary-core": "^2.6.3",

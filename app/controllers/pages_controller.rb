@@ -12,8 +12,20 @@ class PagesController < ApplicationController
   end
 
   def live
-    @graf_image = 'https://res.cloudinary.com/yanninthesky/image/upload/grafitti.png';
     expires_now
+
+    @graf_image = 'https://res.cloudinary.com/yanninthesky/image/upload/grafitti.png';
+    @chat_room = ChatRoom.first
+
+    @coordinates = []
+    @chat_room.messages.each do |message|
+      @coordinates << message
+    end
+
+    respond_to do |format|
+      format.html
+      format.json { render json: @coordinates } # respond with the created JSON object
+    end
   end
 
   def pattern
