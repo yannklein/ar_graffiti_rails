@@ -111,7 +111,7 @@ const graffitiCreate = (scene, camera, grafImage) => {
   textureCanvas.height = canvasSize;
   textureContext = textureCanvas.getContext('2d');
   textureContext.rect(0, 0, textureCanvas.width, textureCanvas.height);
-  textureContext.fillStyle = 'rgba(255, 255, 255, 1)';
+  textureContext.fillStyle = 'rgba(255, 255, 255, 0)';
   textureContext.fill ();
   // const img = new Image();
   // img.onload = () => {
@@ -119,6 +119,9 @@ const graffitiCreate = (scene, camera, grafImage) => {
   // };
   // img.crossOrigin = "anonymous";
   // img.src = grafImage;
+
+  // Create the QR cover
+  createQrCover();
 
   // Draw the lines coming from the DB
   fetchCoord();
@@ -257,19 +260,18 @@ const onDocumentMouseMove = (event) => {
 
 const adminCommand = (event) => {
   if(event.key === "d") {
-    eraseStrokes();
+    // TBD remove strokes
   }
 }
 
-const eraseStrokes = () => {
+const createQrCover = () => {
   textureContext.clearRect(0, 0, textureCanvas.width, textureCanvas.height);
   textureContext.fillStyle = 'rgba(255, 255, 255, 1)';
   const qrCover = sizeOfQrInCanvas * 1.2;
   textureContext.fillRect((textureCanvas.width - qrCover)/2, (textureCanvas.height - qrCover)/2, qrCover, qrCover);
   // textureContext.fillRect(0, 0, textureCanvas.width, textureCanvas.height);
 
-  uploadToCloudinary(textureCanvas.toDataURL());
-  texture.needsUpdate = true;
+  // uploadToCloudinary(textureCanvas.toDataURL());
 }
 
 export { init };
