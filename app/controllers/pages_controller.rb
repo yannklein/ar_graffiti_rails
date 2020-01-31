@@ -15,6 +15,7 @@ class PagesController < ApplicationController
     expires_now
 
     @graf_image = 'https://res.cloudinary.com/yanninthesky/image/upload/grafitti.png';
+    ChatRoom.first.nil? ? ChatRoom.create(name: "chat_room_1")
     @chat_room = ChatRoom.first
 
     @coordinates = []

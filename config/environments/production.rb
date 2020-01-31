@@ -43,7 +43,7 @@ Rails.application.configure do
 
   # Mount Action Cable outside main process or domain
   # config.action_cable.mount_path = nil
-  config.action_cable.url = 'wss://augmented-graffiti.herokuapp.com/'
+  config.action_cable.url = 'wss://augmented-graffiti.herokuapp.com/cable'
   config.action_cable.allowed_request_origins = [ 'http://augmented-graffiti.herokuapp.com/', 'https://augmented-graffiti.herokuapp.com/' ]
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
