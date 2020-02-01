@@ -21,6 +21,6 @@ class MessagesController < ApplicationController
   private
 
   def message_params
-    params.require(:message).permit(:startX, :startY, :endX, :endY, :content)
+    params.require(:message).permit(:startX, :startY, :endX, :endY, :color, :content)
   end
 end

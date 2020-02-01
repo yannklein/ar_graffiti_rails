@@ -5,14 +5,21 @@ import ActionCable from 'actioncable';
 import { initARJS, isMarkerVisible } from './initAR';
 import { uploadFile } from './initCloudinary';
 
+const chatroomId = window.chatroomId;
 const uploadFrequency = 1000;
 const sizeOfQrInCanvas = 200;
+const mouse = new THREE.Vector2();
+const userLineColor = `rgb(${Math.round(Math.random()*255)},${Math.round(Math.random()*255)},${Math.round(Math.random()*255)})`
+
 let isUploadPermitted = true;
 let mousePos = null;
 let textureCanvas, textureContext, texture;
-const chatroomId = window.chatroomId;
 
-
+const renderer = new THREE.WebGLRenderer({
+  antialias: true,
+  autoResize: true,
+  alpha: true
+});
 
 const connectToCableDrawings  = () => {
   App[`chat_room_${chatroomId}`] = App.cable.subscriptions.create(
@@ -28,13 +35,16 @@ const connectToCableDrawings  = () => {
   );
 }
 
-const mouse = new THREE.Vector2();
-
-const renderer = new THREE.WebGLRenderer({
-  antialias: true,
-  autoResize: true,
-  alpha: true
-});
+const sendDrawingToCable = (line) => {
+  fetch(
+    `./chat_rooms/${chatroomId}/messages`, 
+    {
+      method: "POST",
+      headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+      body: JSON.stringify(line)
+    }
+  );
+};
 
 const graffitiUpdate = (scene, camera, raycaster) => {
   // Graffiti update
@@ -47,30 +57,26 @@ const graffitiUpdate = (scene, camera, raycaster) => {
     if (mousePos === null) {
       mousePos = { x, y };
     } else {
-      let strokeColor = [0, 0, 0];
-      textureContext.strokeStyle = `rgb(${strokeColor[0]}, ${strokeColor[1]}, ${strokeColor[2]})`;
-      textureContext.lineWidth = 1;
+      // let strokeColor = [0, 0, 0];
+      // textureContext.strokeStyle = `rgb(${strokeColor[0]}, ${strokeColor[1]}, ${strokeColor[2]})`;
+      // textureContext.lineWidth = 1;
 
-      textureContext.beginPath();
-      textureContext.moveTo(mousePos.x, mousePos.y);
-      textureContext.lineTo(x, y);
-      textureContext.stroke();
-      
-      fetch(
-        `./chat_rooms/${chatroomId}/messages`, 
-        {
-          method: "POST",
-          headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
-          body: JSON.stringify({"startX": `${mousePos.x}`, "startY": `${mousePos.y}`, "endX": `${x}`, "endY": `${y}`})
-        }
-      );
+      // textureContext.beginPath();
+      // textureContext.moveTo(mousePos.x, mousePos.y);
+      // textureContext.lineTo(x, y);
+      // textureContext.stroke();
 
-      // App[`chat_room_${chatroomId}`].send(
-      //     {"startX": `${mousePos.x}`, "startY": `${mousePos.y}`, "endX": `${x}`, "endY": `${y}`}
-      // );
-      // cableSocket.addEventListener('open', (event) => {
-      //   cableSocket.send(JSON.stringify({"startX": `${mousePos.x}`, "startY": `${mousePos.y}`, "endX": `${x}`, "endY": `${y}`}));
-      // });
+      let line = {
+        startX: mousePos.x, 
+        startY: mousePos.y, 
+        endX: x,
+        endY: y,
+        color: userLineColor
+      };
+
+      drawLine(line);
+      sendDrawingToCable(line);
+
       mousePos = { x, y };
     }
     texture.needsUpdate = true;
@@ -78,11 +84,9 @@ const graffitiUpdate = (scene, camera, raycaster) => {
 };
 
 const drawLine = (line) => {
-  textureContext.strokeStyle = `rgb(0,0,0)`;
+  textureContext.strokeStyle = line.color;
   textureContext.lineWidth = 1;
 
-  // console.log(typeof(line.startX));
-  // console.log(textureContext);
   textureContext.beginPath();
   textureContext.moveTo(line.startX, line.startY);
   textureContext.lineTo(line.endX, line.endY);
