@@ -255,20 +255,20 @@ const createQrCover = () => {
   textureContext.textAlign = "center";
   textureContext.shadowColor="black";
   textureContext.shadowBlur=15;
-  textureContext.font = '30px "Rock Salt"';
+  textureContext.font = '40px "Times New Roman"';
 
   textureContext.fillStyle = "rgb(220,220,220)";
-  textureContext.fillText("THAT SPOT", textureCanvas.width/2 - 2, (textureCanvas.height/2 - 15)- 2);
+  textureContext.fillText("THAT SPOT", textureCanvas.width/2 - 2, (textureCanvas.height/2 - 10)- 2);
   textureContext.fillStyle = "black";
-  textureContext.fillText("THAT SPOT", textureCanvas.width/2, (textureCanvas.height/2 - 15));
+  textureContext.fillText("THAT SPOT", textureCanvas.width/2, (textureCanvas.height/2 - 10));
 
   textureContext.fillStyle = "rgb(220,220,220)";
-  textureContext.fillText("IS YOURS", textureCanvas.width/2 - 2 , (textureCanvas.height/2 + 45) - 2);
+  textureContext.fillText("IS YOURS", textureCanvas.width/2 - 2 , (textureCanvas.height/2 + 40) - 2);
   textureContext.fillStyle = "black";
-  textureContext.fillText("IS YOURS", textureCanvas.width/2, (textureCanvas.height/2 + 45));
+  textureContext.fillText("IS YOURS", textureCanvas.width/2, (textureCanvas.height/2 + 40));
 
-  textureContext.font = '10px "Rock Salt"';
-  textureContext.fillText("(use your fingers)", textureCanvas.width/2, (textureCanvas.height/2 + 70));
+  textureContext.font = '10px "Times New Roman"';
+  textureContext.fillText("(use your fingers)", textureCanvas.width/2, (textureCanvas.height/2 + 65));
 }
 
 export { init };
