@@ -9,11 +9,13 @@ class MessagesController < ApplicationController
       respond_to do |format|
         format.html { redirect_to chat_room_path(@chat_room) }
         format.js
+        format.json
       end
     else
       respond_to do |format|
         format.html { render "chat_rooms/show" }
         format.js
+        format.json
       end
     end
   end

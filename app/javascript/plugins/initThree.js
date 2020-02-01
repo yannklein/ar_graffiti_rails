@@ -26,7 +26,7 @@ const connectToCableDrawings  = () => {
     { channel: 'ChatRoomsChannel', chat_room_id: chatroomId },
     {
       received: (data) => {
-        console.log(data);
+        // console.log(data);
         if(data) {
           drawLine(data.message_json);
         }
@@ -57,15 +57,6 @@ const graffitiUpdate = (scene, camera, raycaster) => {
     if (mousePos === null) {
       mousePos = { x, y };
     } else {
-      // let strokeColor = [0, 0, 0];
-      // textureContext.strokeStyle = `rgb(${strokeColor[0]}, ${strokeColor[1]}, ${strokeColor[2]})`;
-      // textureContext.lineWidth = 1;
-
-      // textureContext.beginPath();
-      // textureContext.moveTo(mousePos.x, mousePos.y);
-      // textureContext.lineTo(x, y);
-      // textureContext.stroke();
-
       let line = {
         startX: mousePos.x, 
         startY: mousePos.y, 
@@ -94,18 +85,6 @@ const drawLine = (line) => {
 
   texture.needsUpdate = true;
 }
-
-const uploadToCloudinary = (dataURL) => {
-  if (isUploadPermitted) {
-    isUploadPermitted = false;
-    setTimeout(() => {
-      // console.log(dataURL);
-      console.log("image uploaded");
-      isUploadPermitted = true;
-      uploadFile(dataURL, process.env.CLOUDINARY_SECRET_KEY);
-    }, uploadFrequency);
-  }
-};
 
 const graffitiCreate = (scene, camera, grafImage) => {
   // Customizable texture
@@ -239,14 +218,13 @@ const onDocumentTouchStart = ( event ) => {
   mouse.down = true;
 
   if(event.touches.length === 3) {
-    eraseStrokes();
+    // TBD remove strokes
   }
 }
 
 const onDocumentStrokeDone = (event) => {
   mouse.down = false;
   mousePos = null;
-  uploadToCloudinary(textureCanvas.toDataURL());
 };
 
 const onDocumentMouseDown = (event) => {
@@ -273,9 +251,24 @@ const createQrCover = () => {
   textureContext.fillStyle = 'rgba(255, 255, 255, 1)';
   const qrCover = sizeOfQrInCanvas * 1.2;
   textureContext.fillRect((textureCanvas.width - qrCover)/2, (textureCanvas.height - qrCover)/2, qrCover, qrCover);
-  // textureContext.fillRect(0, 0, textureCanvas.width, textureCanvas.height);
 
-  // uploadToCloudinary(textureCanvas.toDataURL());
+  textureContext.textAlign = "center";
+  textureContext.shadowColor="black";
+  textureContext.shadowBlur=15;
+  textureContext.font = '30px "Rock Salt"';
+
+  textureContext.fillStyle = "rgb(220,220,220)";
+  textureContext.fillText("THAT SPOT", textureCanvas.width/2 - 2, (textureCanvas.height/2 - 15)- 2);
+  textureContext.fillStyle = "black";
+  textureContext.fillText("THAT SPOT", textureCanvas.width/2, (textureCanvas.height/2 - 15));
+
+  textureContext.fillStyle = "rgb(220,220,220)";
+  textureContext.fillText("IS YOURS", textureCanvas.width/2 - 2 , (textureCanvas.height/2 + 45) - 2);
+  textureContext.fillStyle = "black";
+  textureContext.fillText("IS YOURS", textureCanvas.width/2, (textureCanvas.height/2 + 45));
+
+  textureContext.font = '10px "Rock Salt"';
+  textureContext.fillText("(use your fingers)", textureCanvas.width/2, (textureCanvas.height/2 + 70));
 }
 
 export { init };
