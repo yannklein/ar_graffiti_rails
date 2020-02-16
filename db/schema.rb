@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_01_020044) do
+ActiveRecord::Schema.define(version: 2020_02_16_184709) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,9 @@ ActiveRecord::Schema.define(version: 2020_02_01_020044) do
     t.float "endX"
     t.float "endY"
     t.string "color"
+    t.integer "angle"
+    t.integer "size"
+    t.string "message_type"
     t.index ["chat_room_id"], name: "index_messages_on_chat_room_id"
   end
 

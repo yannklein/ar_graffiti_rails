@@ -3,6 +3,9 @@ import * as THREE from '../vendor/three.min.js';
 import { initARJS, isMarkerVisible } from './initAR';
 // import { uploadFile } from './initCloudinary';
 
+const lineMsgText = document.querySelector(".live-message-text");
+const lineMsgBtn = document.querySelector(".live-message-submit");
+
 const chatroomId = window.chatroomId;
 const sizeOfQrInCanvas = 200;
 const mouse = new THREE.Vector2();
@@ -24,7 +27,12 @@ const connectToCableDrawings  = () => {
       received: (data) => {
         // console.log(data);
         if(data) {
-          drawLine(data.message_json);
+          if (data.message_json.message_type === "drawing"){
+            drawLine(data.message_json);
+          } 
+          else if (data.message_json.message_type === "message"){
+            drawMessage(data.message_json);
+          }
         }
       }
     }
@@ -54,6 +62,7 @@ const graffitiUpdate = (scene, camera, raycaster) => {
       mousePos = { x, y };
     } else {
       let line = {
+        message_type: "drawing",
         startX: mousePos.x, 
         startY: mousePos.y, 
         endX: x,
@@ -70,6 +79,37 @@ const graffitiUpdate = (scene, camera, raycaster) => {
   }
 };
 
+const drawMessage = (message) => {
+
+  textureContext.textAlign = "center";
+  textureContext.shadowColor="black";
+  textureContext.shadowBlur = 15;
+  textureContext.font = `${message.size}px "Rock Salt"`;
+  textureContext.fillStyle = message.color;
+  // console.log(fontAngle);
+  textureContext.rotate(message.angle * Math.PI / 180);
+  textureContext.fillText(message.content, message.startX, message.startY);
+  textureContext.rotate(-message.angle * Math.PI / 180);
+};
+
+const initMessageDrawing = () => {
+  lineMsgBtn.addEventListener("click", (event) => {
+    const fontSize = [8, 16, 24, 32, 40][Math.floor(Math.random() * 5)];
+    const fontAngle = Math.floor(Math.random() * 60) - 30;
+    let message = {
+      message_type: "message",
+      startX: textureCanvas.width * Math.random(), 
+      startY: textureCanvas.height * Math.random(),
+      size: fontSize,
+      angle: fontAngle,
+      content: lineMsgText.value,
+      color: userLineColor
+    };
+    drawMessage(message);
+    sendDrawingToCable(message);
+  });
+};
+
 const drawLine = (line) => {
   textureContext.strokeStyle = line.color;
   textureContext.lineWidth = 1;
@@ -80,7 +120,7 @@ const drawLine = (line) => {
   textureContext.stroke();
 
   texture.needsUpdate = true;
-}
+};
 
 const graffitiCreate = (scene, camera, grafImage) => {
   // Customizable texture
@@ -101,6 +141,9 @@ const graffitiCreate = (scene, camera, grafImage) => {
 
   // Create the QR cover
   createQrCover();
+
+  // Init message drawing event listener
+  initMessageDrawing();
 
   // Draw the lines coming from the DB
   fetchCoord();
@@ -127,8 +170,13 @@ const fetchCoord = () => {
   fetch('./live.json')
   .then(response => response.json())
   .then((data) => {
-    data.forEach((line) => {
-      drawLine(line);
+    data.forEach((userInput) => {
+      if (userInput.message_type === "drawing"){
+        drawLine(userInput);
+      } 
+      else if (userInput.message_type === "message"){
+        drawMessage(userInput);
+      }
     });
   });
 };
@@ -250,7 +298,7 @@ const createQrCover = () => {
 
   textureContext.textAlign = "center";
   textureContext.shadowColor="black";
-  textureContext.shadowBlur=15;
+  textureContext.shadowBlur = 15;
   textureContext.font = '40px "Rock Salt"';
 
   textureContext.fillStyle = "rgb(220,220,220)";
