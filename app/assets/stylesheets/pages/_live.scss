@@ -1,0 +1,23 @@
+.live-message {
+  position: fixed;
+  width: 100vw;
+  bottom: 0;
+  display: flex;
+  z-index: 9999;
+  font-size: 32px;
+}
+
+.live-message-text {
+  flex-grow: 1;
+  background: rgba(0,0,0,0.8);
+  border: none;
+  color: white;
+}
+
+.live-message-submit {
+  border-radius: 4px;
+  background: linear-gradient(rgba(100,100,100,1), rgba(0,0,0,1));
+  color: white;
+  text-align: center;
+  padding: 0 8px;
+}

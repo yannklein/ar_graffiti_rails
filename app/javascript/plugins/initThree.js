@@ -1,17 +1,13 @@
 import * as THREE from '../vendor/three.min.js';
-import { THREEx, WebAR } from '../vendor/ar';
-import ActionCable from 'actioncable';
 
 import { initARJS, isMarkerVisible } from './initAR';
-import { uploadFile } from './initCloudinary';
+// import { uploadFile } from './initCloudinary';
 
 const chatroomId = window.chatroomId;
-const uploadFrequency = 1000;
 const sizeOfQrInCanvas = 200;
 const mouse = new THREE.Vector2();
-const userLineColor = `rgb(${Math.round(Math.random()*255)},${Math.round(Math.random()*255)},${Math.round(Math.random()*255)})`
+const userLineColor = `rgb(${Math.round(Math.random()*255)},${Math.round(Math.random()*255)},${Math.round(Math.random()*255)})`;
 
-let isUploadPermitted = true;
 let mousePos = null;
 let textureCanvas, textureContext, texture;
 
@@ -255,7 +251,7 @@ const createQrCover = () => {
   textureContext.textAlign = "center";
   textureContext.shadowColor="black";
   textureContext.shadowBlur=15;
-  textureContext.font = '40px "Times New Roman"';
+  textureContext.font = '40px "Rock Salt"';
 
   textureContext.fillStyle = "rgb(220,220,220)";
   textureContext.fillText("THAT SPOT", textureCanvas.width/2 - 2, (textureCanvas.height/2 - 10)- 2);
@@ -267,7 +263,7 @@ const createQrCover = () => {
   textureContext.fillStyle = "black";
   textureContext.fillText("IS YOURS", textureCanvas.width/2, (textureCanvas.height/2 + 40));
 
-  textureContext.font = '10px "Times New Roman"';
+  textureContext.font = '10px "Rock Salt"';
   textureContext.fillText("(use your fingers)", textureCanvas.width/2, (textureCanvas.height/2 + 65));
 }
 
