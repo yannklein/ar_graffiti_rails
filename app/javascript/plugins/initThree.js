@@ -107,6 +107,7 @@ const initMessageDrawing = () => {
     };
     drawMessage(message);
     sendDrawingToCable(message);
+    lineMsgText.value = "";
   });
 };
 
