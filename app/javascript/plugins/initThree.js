@@ -82,11 +82,11 @@ const graffitiUpdate = (scene, camera, raycaster) => {
 const drawMessage = (message) => {
 
   textureContext.textAlign = "center";
+  textureContext.strokeStyle = message.color;
   // textureContext.shadowColor="black";
   // textureContext.shadowBlur = 8;
   textureContext.font = `${message.size}px sans-serif`;
   textureContext.fillStyle = message.color;
-  textureContext.strokeStyle = "black";
   // console.log(fontAngle);
   textureContext.rotate(message.angle * Math.PI / 180);
   textureContext.fillText(message.content, message.startX, message.startY);
@@ -99,8 +99,8 @@ const initMessageDrawing = () => {
     const fontAngle = Math.floor(Math.random() * 60) - 30;
     let message = {
       message_type: "message",
-      startX: textureCanvas.width * Math.random(),
-      startY: textureCanvas.height * Math.random(),
+      startX: textureCanvas.width * Math.random() * 0.5,
+      startY: textureCanvas.height * Math.random() * 0.5,
       size: fontSize,
       angle: fontAngle,
       content: lineMsgText.value,
@@ -133,7 +133,7 @@ const graffitiCreate = (scene, camera, grafImage) => {
   textureContext = textureCanvas.getContext('2d');
   textureContext.rect(0, 0, textureCanvas.width, textureCanvas.height);
   textureContext.fillStyle = 'rgba(255, 255, 255, 0)';
-  textureContext.fill ();
+  textureContext.fill();
   // const img = new Image();
   // img.onload = () => {
   //   textureContext.drawImage(img, 0, 0);
