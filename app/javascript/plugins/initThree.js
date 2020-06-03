@@ -82,10 +82,11 @@ const graffitiUpdate = (scene, camera, raycaster) => {
 const drawMessage = (message) => {
 
   textureContext.textAlign = "center";
-  textureContext.shadowColor="black";
-  textureContext.shadowBlur = 15;
-  textureContext.font = `${message.size}px "Rock Salt"`;
+  // textureContext.shadowColor="black";
+  // textureContext.shadowBlur = 8;
+  textureContext.font = `${message.size}px sans-serif`;
   textureContext.fillStyle = message.color;
+  textureContext.strokeStyle = "black";
   // console.log(fontAngle);
   textureContext.rotate(message.angle * Math.PI / 180);
   textureContext.fillText(message.content, message.startX, message.startY);
@@ -299,21 +300,21 @@ const createQrCover = () => {
 
   textureContext.textAlign = "center";
   textureContext.shadowColor="black";
-  textureContext.shadowBlur = 15;
+  textureContext.shadowBlur = 8;
   textureContext.font = '40px sans-serif';
 
-  textureContext.fillStyle = "rgb(220,220,220)";
-  textureContext.fillText("THAT SPOT", textureCanvas.width/2 - 2, (textureCanvas.height/2 - 10)- 2);
+  // textureContext.fillStyle = "rgb(220,220,220)";
+  // textureContext.fillText("THAT SPOT", textureCanvas.width/2 - 2, (textureCanvas.height/2 - 10)- 2);
   textureContext.fillStyle = "black";
   textureContext.fillText("THAT SPOT", textureCanvas.width/2, (textureCanvas.height/2 - 10));
 
-  textureContext.fillStyle = "rgb(220,220,220)";
-  textureContext.fillText("IS YOURS", textureCanvas.width/2 - 2 , (textureCanvas.height/2 + 40) - 2);
+  // textureContext.fillStyle = "rgb(220,220,220)";
+  // textureContext.fillText("IS YOURS", textureCanvas.width/2 - 2 , (textureCanvas.height/2 + 40) - 2);
   textureContext.fillStyle = "black";
   textureContext.fillText("IS YOURS", textureCanvas.width/2, (textureCanvas.height/2 + 40));
 
   textureContext.font = '10px sans-serif';
-  textureContext.fillText("(use your fingers)", textureCanvas.width/2, (textureCanvas.height/2 + 65));
+  textureContext.fillText("(use your fingers ✌️)", textureCanvas.width/2, (textureCanvas.height/2 + 65));
 }
 
 export { init };
