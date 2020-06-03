@@ -29,7 +29,7 @@ const connectToCableDrawings  = () => {
         if(data) {
           if (data.message_json.message_type === "drawing"){
             drawLine(data.message_json);
-          } 
+          }
           else if (data.message_json.message_type === "message"){
             drawMessage(data.message_json);
           }
@@ -41,7 +41,7 @@ const connectToCableDrawings  = () => {
 
 const sendDrawingToCable = (line) => {
   fetch(
-    `./chat_rooms/${chatroomId}/messages`, 
+    `./chat_rooms/${chatroomId}/messages`,
     {
       method: "POST",
       headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
@@ -63,8 +63,8 @@ const graffitiUpdate = (scene, camera, raycaster) => {
     } else {
       let line = {
         message_type: "drawing",
-        startX: mousePos.x, 
-        startY: mousePos.y, 
+        startX: mousePos.x,
+        startY: mousePos.y,
         endX: x,
         endY: y,
         color: userLineColor
@@ -98,7 +98,7 @@ const initMessageDrawing = () => {
     const fontAngle = Math.floor(Math.random() * 60) - 30;
     let message = {
       message_type: "message",
-      startX: textureCanvas.width * Math.random(), 
+      startX: textureCanvas.width * Math.random(),
       startY: textureCanvas.height * Math.random(),
       size: fontSize,
       angle: fontAngle,
@@ -174,7 +174,7 @@ const fetchCoord = () => {
     data.forEach((userInput) => {
       if (userInput.message_type === "drawing"){
         drawLine(userInput);
-      } 
+      }
       else if (userInput.message_type === "message"){
         drawMessage(userInput);
       }
@@ -275,7 +275,7 @@ const onDocumentStrokeDone = (event) => {
 const onDocumentMouseDown = (event) => {
   mouse.down = true;
   mouse.x = ( ( event.clientX - renderer.domElement.offsetLeft ) / renderer.domElement.clientWidth ) * 2 - 1;
-  mouse.y = -((event.clientY - renderer.domElement.offsetTop) / renderer.domElement.clientHeight) * 2 + 1;   
+  mouse.y = -((event.clientY - renderer.domElement.offsetTop) / renderer.domElement.clientHeight) * 2 + 1;
 };
 
 const onDocumentMouseMove = (event) => {
@@ -300,7 +300,7 @@ const createQrCover = () => {
   textureContext.textAlign = "center";
   textureContext.shadowColor="black";
   textureContext.shadowBlur = 15;
-  textureContext.font = '40px "Rock Salt"';
+  textureContext.font = '40px sans-serif';
 
   textureContext.fillStyle = "rgb(220,220,220)";
   textureContext.fillText("THAT SPOT", textureCanvas.width/2 - 2, (textureCanvas.height/2 - 10)- 2);
@@ -312,7 +312,7 @@ const createQrCover = () => {
   textureContext.fillStyle = "black";
   textureContext.fillText("IS YOURS", textureCanvas.width/2, (textureCanvas.height/2 + 40));
 
-  textureContext.font = '10px "Rock Salt"';
+  textureContext.font = '10px sans-serif';
   textureContext.fillText("(use your fingers)", textureCanvas.width/2, (textureCanvas.height/2 + 65));
 }
 
