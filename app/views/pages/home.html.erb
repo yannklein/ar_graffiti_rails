@@ -1,5 +1,13 @@
-<h1>Draw graffiti in augmented reality</h1>
-
-<div>Put this marker on a Wall</div>
-<%= image_tag @marker_png %>
-<div>Scan it with your phone or access the Augmented world from <%= link_to  "here", live_path %></div>
+<div class="home-container">
+  <h1>Draw graffiti in augmented reality</h1>
+  <div class="home-marker">
+    <p>Put this marker on a Wall</p>
+    <%= image_tag @marker_png %>
+    <p>
+      Scan it with your phone or access the Augmented world from <%= link_to  "here", live_path %>.
+    </p>
+  </div>
+  <p class="home-footer">
+    More AR and other projects on <%= link_to  "Yann Klein's portfolio", "https://www.yannklein.me" %>
+  </p>
+</div>
